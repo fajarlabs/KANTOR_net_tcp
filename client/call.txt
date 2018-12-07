@@ -1,0 +1,1 @@
+python "C:\Python27\Scripts\serial2tcp.py" -p COM1 -b 38400 -l 172.27.3.251 -P 8000 --access-list='10.1.11.37,172.27.3.251'

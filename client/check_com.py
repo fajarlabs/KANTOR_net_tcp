@@ -1,6 +1,5 @@
 import serial
 import time
-from udp_sender import transmit_udp
 
 # SERIAL
 S_COM = 'COM1'
@@ -10,12 +9,11 @@ def serial_connect() :
     global S_COM
     global S_BAUDRATE
     try :
-        serial.Serial(port=S_COM,baudrate=S_BAUDRATE,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=0)
+        ser = serial.Serial(port=S_COM,baudrate=S_BAUDRATE,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=0)
         while True:
              cc=str(ser.readline())
              print(cc)
-             transmit_udp(cc)
-             time.sleep(1)
+             time.sleep(0.01)
     except Exception as e :
         print(e)
 

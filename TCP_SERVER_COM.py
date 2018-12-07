@@ -1,0 +1,61 @@
+import serial
+import socket
+from threading import Thread
+import time
+from udp_sender import transmit_udp
+
+# SERIAL
+S_COM = 'COM1'
+S_BAUDRATE = 38400
+
+# TCP SERVER
+TCP_IP = '172.27.3.251'
+TCP_PORT = 8000
+BUFFER_SIZE = 1024  # Normally 1024, but we want fast response
+MS_INTERVAL = 0.5 # setengah detik
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((TCP_IP, TCP_PORT))
+s.listen(32)
+
+def serial_connect() :
+    global S_COM
+    global S_BAUDRATE
+    try :
+        return serial.Serial(port=S_COM,baudrate=S_BAUDRATE,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=0)
+    except Exception as e :
+        print(e)
+    return None
+
+def handle_client_connection(serial_conn) :
+    conn, addr = s.accept()
+    print ('Connection address:', addr)
+    while True:
+        data = conn.recv(BUFFER_SIZE)
+        conn.send(str(serial_conn.readline()))  # echo
+    conn.close()
+
+def main_server_tcp () :
+    serial_conn = serial_connect()
+
+    if serial_conn == None :
+        print("Serial ",S_COM," not connected")
+    else :
+        while True:
+            try :
+                t = Thread(target=handle_client_connection, args=(serial_conn,))
+                t.setDaemon(True)
+                t.start()
+            except Exception as e :
+                print(e)
+
+def main () :
+    server_tcp_thread = Thread(target=main_server_tcp)
+    server_tcp_thread.setDaemon(True)
+    server_tcp_thread.start()
+
+    while(True) :
+        pass
+
+if __name__ == "__main__":
+    main()
