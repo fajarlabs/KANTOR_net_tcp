@@ -11,6 +11,7 @@ logging.basicConfig(filename='D:/python/info.log',level=logging.DEBUG)
 
 # SERVER
 IP_SERVER = "10.1.11.37"
+# Ganti PORT disini sesuai yg disediakan oleh pihak server
 PORT_SERVER = 4023
 # init socket server
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
